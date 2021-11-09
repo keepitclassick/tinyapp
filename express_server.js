@@ -12,8 +12,8 @@ function generateRandomString() {
   let alpha = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
   const charLength = alpha.length
 
-  for(let i = 0; i < 6; i++) { //will run 6 times
-    result += alpha.charAt(Math.floor(Math.random() * charLength));
+  for(let i = 0; i < 6; i++) { 
+    result += alpha.charAt(Math.floor(Math.random() * charLength)); 
   }
   return result;
 };
@@ -50,9 +50,15 @@ app.get("/urls/:id", (req, res) => {
   res.render("urls_show", templateVars);
 });
 
+app.get("/u/:shortURL", (req, res) => {
+  const longURL = urlDatabase[req.params.shortURL];
+  res.redirect(longURL);
+});
+
 app.post("/urls", (req, res) => {
-  console.log(req.body);  // Log the POST request body to the console
-  res.send("Ok");         // Respond with 'Ok' (we will replace this)
+  const newShortURL = generateRandomString();
+  urlDatabase[newShortURL] = [req.body.longURL]
+  res.redirect(`/urls/${newShortURL}`);
 });
 
 app.listen(PORT, () => {
