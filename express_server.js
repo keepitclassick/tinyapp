@@ -8,7 +8,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
 app.use(cookieParser())
 
-function generateRandomString() {
+const generateRandomString = function() {
   let result = '';
   let alpha = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
   const charLength = alpha.length
@@ -19,6 +19,15 @@ function generateRandomString() {
   return result;
 };
 
+const findUserByEmail = function(email) {
+  for (let key in users) {
+    if(users[key].email === email) {
+      return users[key];
+    }
+  }
+  return null
+};
+//====================================//
 const urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com",
@@ -85,12 +94,20 @@ app.get("/register", (req, res) => {
 })
   
 app.post("/register", (req, res) => { //gens new user ID and adds details to users object. Also creates a cookie for the user id.
-  newUserID = generateRandomString()
-  users[newUserID] =  { id: newUserID, email: req.body.email, password: req.body.password }
-  res.cookie("user_id", newUserID);
-  console.log(users);
-  res.redirect("/urls");
+  let newUserID = generateRandomString();
+  const foundUser = findUserByEmail(req.body.email);
+    if (req.body.email === '' || req.body.password === '') {
+    res.sendStatus(400);
+    } else if (foundUser) {
+    res.sendStatus(400);
+    } else {
+    users[newUserID] =  { id: newUserID, email: req.body.email, password: req.body.password }
+    res.cookie("user_id", newUserID);
+    console.log(users);
+    res.redirect("/urls");
+    }
 })
+
 //edits specific url and redirects to main url page
 app.post("/urls/:id", (req, res) => {
   shortURL = req.params.id;
@@ -101,6 +118,13 @@ app.post("/urls/:id", (req, res) => {
 app.post("/login", (req, res) => {
 res.cookie("user_id", req.cookies["user_id"]); //creates a cookie with the user id added to the form
 res.redirect("/urls/");
+})
+
+app.get("/login", (req, res) => {
+  let templateVars = {
+    user: users[req.cookies["user_id"]],
+  };
+res.render("login_form", templateVars);
 })
 
 app.post("/logout", (req, res) => {

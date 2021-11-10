@@ -17,10 +17,8 @@
         <button type="submit" class="btn btn-secondary btn-sm">Logout</button>
       </form>
       <% } else {%>
-    <form method="POST" action="/login">
-      <input type="text" name="username" placeholder="username" style="width: 275px; margin: 1em">
-      <button type="submit" class="btn btn-secondary btn-sm">Sign In</button>
-    </form>
+        <a href="localhost:8080/register" class="badge badge-success">Register</a>
+        <a href="localhost:8080/login" class="badge badge-success">Log In</a>
     <% } %>
   </nav>
 </header>
