@@ -23,33 +23,40 @@ const urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com",
 }
-
-app.get("/", (req, res) => {
-  res.send("Hello!");
-});
+const users = { 
+  "BobtheBuilder": {
+    id: "BobtheBuilder", 
+    email: "bob@building.com", 
+    password: "IcanFIXit"
+  },
+ "ElBarto": {
+    id: "ElBarto", 
+    email: "lisasux@icloud.com", 
+    password: "ayycurramba"
+  }
+}
 
 app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
 });
 
-app.get("/hello", (req, res) => {
-  res.send("<html><body>Hello <b>World</b></body></html>\n");
-});
-
 app.get("/urls", (req, res) => {
+  let userATM = users[req.cookies.user_id];
   let templateVars = { urls: urlDatabase,
-    username: req.cookies["username"] };
+    user: userATM};
 
   res.render("urls_index", templateVars);
 });
 
 app.get("/urls/new", (req, res) => {
-  const templateVars =  { username: req.cookies["username"] };
+  let userATM = users[req.cookies["user_id"]];
+  const templateVars =  { user: userATM };
   res.render("urls_new", templateVars);
 });
 
 app.get("/urls/:shortURL", (req, res) => {
-  const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL], username: req.cookies["username"] };
+  let userATM = users[req.cookies["user_id"]];
+  const templateVars = { user: userATM, shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL],  };
   res.render("urls_show", templateVars);
 });
 
@@ -70,20 +77,34 @@ app.post("/urls/:shortURL/delete", (req, res) =>{
   delete urlDatabase[shortURL];
   res.redirect("/urls");
 });
+
+app.get("/register", (req, res) => {
+  let userATM = users[req.cookies["user_id"]];
+  const signupVars = { email: req.body.email, password: req.body.password, user: userATM}
+  res.render("register_form", signupVars)
+})
+  
+app.post("/register", (req, res) => { //gens new user ID and adds details to users object. Also creates a cookie for the user id.
+  newUserID = generateRandomString()
+  users[newUserID] =  { id: newUserID, email: req.body.email, password: req.body.password }
+  res.cookie("user_id", newUserID);
+  console.log(users);
+  res.redirect("/urls");
+})
 //edits specific url and redirects to main url page
 app.post("/urls/:id", (req, res) => {
   shortURL = req.params.id;
   urlDatabase[shortURL] = req.body.editURL;
   res.redirect("/urls/");
-});
+})
 
 app.post("/login", (req, res) => {
-res.cookie("username", req.body.username);
+res.cookie("user_id", req.cookies["user_id"]); //creates a cookie with the user id added to the form
 res.redirect("/urls/");
 })
 
 app.post("/logout", (req, res) => {
-res.clearCookie("username", req.body.username);
+res.clearCookie("user_id"); //deletes the cookie
 res.redirect("/urls");
 })
 
