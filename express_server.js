@@ -8,25 +8,6 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
 app.use(cookieParser())
 
-const generateRandomString = function() {
-  let result = '';
-  let alpha = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-  const charLength = alpha.length
-
-  for(let i = 0; i < 6; i++) { 
-    result += alpha.charAt(Math.floor(Math.random() * charLength)); 
-  }
-  return result;
-};
-
-const findUserByEmail = function(email) {
-  for (let key in users) {
-    if(users[key].email === email) {
-      return users[key];
-    }
-  }
-  return null
-};
 //====================================//
 const urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
@@ -44,6 +25,29 @@ const users = {
     password: "ayycurramba"
   }
 }
+
+const findUserByEmail = function(email) {
+  for (let key in users) {
+    if(users[key].email === email) {
+      return users[key];
+    }
+  }
+  return null
+};
+
+const generateRandomString = function() {
+  let result = '';
+  let alpha = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+  const charLength = alpha.length
+
+  for(let i = 0; i < 6; i++) { 
+    result += alpha.charAt(Math.floor(Math.random() * charLength)); 
+  }
+  return result;
+};
+
+
+
 
 app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
@@ -116,8 +120,15 @@ app.post("/urls/:id", (req, res) => {
 })
 
 app.post("/login", (req, res) => {
-res.cookie("user_id", req.cookies["user_id"]); //creates a cookie with the user id added to the form
-res.redirect("/urls/");
+const foundUser = findUserByEmail(req.body.email);
+  if (!foundUser) {
+  res.sendStatus(403);
+  } else if (foundUser && req.body.password !== foundUser.password) {
+  res.sendStatus(403);
+  } else {
+  res.cookie("user_id", foundUser.id);
+  }
+  res.redirect("/urls/");
 })
 
 app.get("/login", (req, res) => {
