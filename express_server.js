@@ -15,37 +15,6 @@ app.use(cookieSession({
   keys: ["key1", "key2"],
   maxAge: 24 * 60 * 60 * 1000 // 24 hours
 }))
-/*
-const generateRandomString = function() {
-  let result = '';
-  let alpha = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-  const charLength = alpha.length
-
-  for(let i = 0; i < 6; i++) { 
-    result += alpha.charAt(Math.floor(Math.random() * charLength)); 
-  }
-  return result;
-};
-
-const findUserByEmail = function(email, database) {
-  for (let key in database) {
-    if(database[key].email === email) {
-      return database[key];
-    }
-  }
-  return null;
-};
-
-const urlsForUser = function(id) {
-  let userUrls = {};
-  for (let shortURL in urlDatabase) {
-    if (urlDatabase[shortURL].userID === id) {
-      userUrls[shortURL] = urlDatabase[shortURL];
-    }
-  } 
-  return userUrls;
-}; */
-//====================================//
 
 
 app.get("/urls.json", (req, res) => {

@@ -25,7 +25,7 @@ const users = {
   }
 }
 
-
+//gens random string for new user id
 const generateRandomString = function() {
   let result = '';
   let alpha = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
@@ -37,16 +37,18 @@ const generateRandomString = function() {
   return result;
 };
 
+//finds if user is in the database
 const findUserByEmail = function(email, database) {
   for (let key in database) {
     if(database[key].email === email) {
-      return database[key];
+      return database[key].id;
     }
   }
-  return null;
+  return undefined;
 };
 
-const urlsForUser = function(id) {
+//returns an object of all specific user urls
+const urlsForUser = function(id, urlDatabase) {
   let userUrls = {};
   for (let shortURL in urlDatabase) {
     if (urlDatabase[shortURL].userID === id) {
