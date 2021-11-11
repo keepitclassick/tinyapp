@@ -1,14 +1,4 @@
 
-const generateRandomString = function() {
-  let result = '';
-  let alpha = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-  const charLength = alpha.length
-
-  for(let i = 0; i < 6; i++) { 
-    result += alpha.charAt(Math.floor(Math.random() * charLength)); 
-  }
-  return result;
-};
 
 const users = { 
   "BobtheBuilder": {
@@ -22,6 +12,19 @@ const users = {
     password: "ayycurramba"
   }
 }
+
+const generateRandomString = function() {
+  let result = '';
+  let alpha = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+  const charLength = alpha.length
+
+  for(let i = 0; i < 6; i++) { 
+    result += alpha.charAt(Math.floor(Math.random() * charLength)); 
+  }
+  return result;
+};
+
+
 
 const findUserByEmail = function(email) {
   for (let key in users) {

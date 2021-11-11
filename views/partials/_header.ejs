@@ -18,8 +18,12 @@
         </div>
       </form>
       <% } else {%>
-        <a href="localhost:8080/register" class="badge badge-success">Register</a>
-        <a href="localhost:8080/login" class="badge badge-success">Log In</a>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
+          <div class="navbar-nav">
+            <a class="nav-item nav-link" href="/login" style="margin: 1em">Login</a>
+            <a class="nav-item nav-link" href="/register" style="margin: 1em">Register</a>
+          </div>
+        </div>
     <% } %>
   </nav>
 </header>
