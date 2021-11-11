@@ -3,8 +3,9 @@ const app = express();
 const PORT = 8080; // default port 8080
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
-app.use(bodyParser.urlencoded({extended: true}));
+const bcrypt = require('bcryptjs');
 
+app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
 app.use(cookieParser())
 
@@ -53,12 +54,12 @@ const users = {
   "BobtheBuilder": {
     id: "BobtheBuilder", 
     email: "bob@building.com", 
-    password: "IcanFIXit"
+    password: bcrypt.hashSync("IcanFIXit", 10)
   },
  "ElBarto": {
     id: "ElBarto", 
     email: "lisasux@icloud.com", 
-    password: "ayycurramba"
+    password: bcrypt.hashSync("ayycarrumba", 10)
   }
 }
 
@@ -156,7 +157,7 @@ app.post("/register", (req, res) => { //gens new user ID and adds details to use
     } else {
     users[newUserID] =  { id: newUserID, 
       email: req.body.email, 
-      password: req.body.password }
+      password: bcrypt.hashSync(req.body.password, 10) }
     res.cookie("user_id", newUserID);
     console.log(users);
     res.redirect("/urls");
@@ -180,15 +181,15 @@ app.post("/urls/:shortURL", (req, res) => {
 
 app.post("/login", (req, res) => {
 const foundUser = findUserByEmail(req.body.email);
-  if (foundUser) {
-  res.cookie("user_id", foundUser.id);
-  res.redirect("/urls/");
-  } else if (foundUser && req.body.password !== foundUser.password) {
-    res.status(403).send('Email and password do not match.')
+const password = req.body.password
+    if (foundUser && !bcrypt.compareSync(password, foundUser.password)) {
+    return res.status(403).send('Email and password do not match.')
   } else if (!foundUser) {
-    res.status(403).send('Email does not exist.')
+    return res.status(403).send('Email does not exist.')
+  } else {
+    res.cookie("user_id", foundUser.id);
+    return res.redirect("/urls/");
   }
-  return;
 })
 
 //LOGS IN & CREATES COOKIE
