@@ -22,16 +22,16 @@
         </thead>
         <tbody>
           <% if (!user) { %>
-            <div class="alert alert-warning" role="alert">
+            <div class="alert alert-info" role="alert">
                 Please <a href="/login" class="alert-link">login</a> or <a href="/register" class="alert-link">register</a>.
               </div>
           <% } else { %>
-          <% for(let url in urls) { %>
+            <% for(let url in urls) { %>
             <tr>
             <td><%= url %></td>
             <td><%= urls[url].longURL %></td>
             <td><form method="GET" action="/urls/<%= url %>">
-              <button type="submit" class="btn btn-outline-success">Update</button>
+              <button type="submit" class="btn btn-outline-info">Update</button>
             </form>
           </td>
             <td><form method="POST" action="/urls/<%= url %>/delete">
@@ -39,11 +39,14 @@
             </form>
           </td>
           </tr>
-          <% } %>
+            <% } %>
+            <div class="alert alert-info" role="alert">
+              Click <a href="/urls/new">here</a> to shorten your URL
+              </div>
           <% } %>
         </tbody>
       </table>
-      <h6>Click <a href='#'>here</a> to shorten your URL!</h6>
+      
       
     </main>
 <!-- Bootstrap JS -->
