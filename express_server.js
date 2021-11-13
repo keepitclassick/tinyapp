@@ -20,9 +20,9 @@ app.use(cookieSession({
 app.get("/", (req, res) => {
   const userATM = users[req.session.user_id];
   if (userATM) {
-    res.redirect("/urls");
+    return res.redirect("/urls");
   } else {
-  res.redirect("/login");
+    return res.redirect("/login");
   }
 });
 
