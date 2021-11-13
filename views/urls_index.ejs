@@ -25,7 +25,7 @@
             <div class="alert alert-info" role="alert">
                 Please <a href="/login" class="alert-link">login</a> or <a href="/register" class="alert-link">register</a>.
               </div>
-          <% } else { %>
+          <% } if (user) { %>
             <% for(let url in urls) { %>
             <tr>
             <td><%= url %></td>
