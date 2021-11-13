@@ -49,7 +49,7 @@ app.get("/urls/new", (req, res) => {
 
 //SHOWS THE VALUES OF THE SHORT URL AND ALLOWS USER TO EDIT
 app.get("/urls/:shortURL", (req, res) => {
-  if (urlDatabase[req.params.shortURL] ) {
+  if (urlDatabase[req.params.shortURL]) {
     let templateVars = {
       shortURL: req.params.shortURL,
       longURL: urlDatabase[req.params.shortURL].longURL,
