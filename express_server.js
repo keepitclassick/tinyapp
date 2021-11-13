@@ -16,6 +16,16 @@ app.use(cookieSession({
   maxAge: 24 * 60 * 60 * 1000 // 24 hours
 }));
 
+//If A USER IS LOGGED IN, REDIRECTS TO URLS. IF NO USER, REDIRECTS TO LOG IN
+app.get("/", (req, res) => {
+  const userATM = users[req.session.user_id];
+  if (userATM) {
+    res.redirect("/urls");
+  } else {
+  res.redirect("/login");
+  }
+});
+
 //SHOWS USER A LIST OF THEIR URLS IF LOGGED IN, IF NOT IT WILL BE EMPTY AND PROMPT THEM TO LOG IN/ SIGN UP
 app.get("/urls", (req, res) => {
   const templateVars = {
